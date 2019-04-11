@@ -1,0 +1,44 @@
+"""
+Comparative study to understand mathematical foundation of linear regression
+"""
+import pandas as pd
+import numpy  as np
+from sklearn.preprocessing import StandardScaler
+
+data=pd.read_excel('Data.xlsx')
+names = data.columns
+sc_cons = StandardScaler()
+data_scale=pd.DataFrame(sc_cons.fit_transform(data), columns = names)
+y=data_scale[['Saving']]
+x_scale=data_scale.drop(['Saving'], axis=1)
+
+"""
+Mathematical implementation to find the coefficient 
+"""
+x_scale_transpose = np.transpose(x_scale)
+x_scale_dot       = np.dot(x_scale_transpose,x_scale)
+x_scale_inv       = np.linalg.inv(x_scale_dot)
+
+x_scale_dot_inv   = np.dot(x_scale_inv,x_scale_transpose)
+x_coeff           = np.dot(x_scale_dot_inv,y)
+
+print(x_coeff)
+"""
+output:
+    1.04803 , -0.640995, -1.32812, 0.795083
+
+"""
+
+"""
+Machine learning implementation to find the coefficient 
+"""
+
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+lr.fit(x_scale,y)
+
+print(lr.coef_)
+"""
+Output:
+    1.0487265, -0.69155079, -0.31695161,  0.59143838
+"""
